@@ -12,6 +12,11 @@ find . -name Kptfile -print0 |
     xargs -0 --no-run-if-empty \
         sed --in-place -E 's|image:.+/(.+):(.+)|exec: \1-\2|'
 
+# fetch the upstream packages if any
+if [[ "$(yq '.upstream' Kptfile)" != "null" ]] ; then
+    kpt pkg update
+fi
+
 # render the configuration with the Kptfile pipelines
 kpt fn render --allow-exec
 
